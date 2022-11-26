@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% block title %}Home{% endblock%} {% block body %} 
+{% if messages %} {% for message in messages %}
+<div class="alert alert-dismissible alert-success">
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  {{message}}
+</div>
+{% endfor %} {% endif %}
+
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  {% load static %}
+</head>
+<body>
+  <div class="container-lg">
+    <div class="table-responsive">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row" style="margin-top: 5px">
+            <div class="col-sm-8">
+              <h2>Todo <b>List</b></h2>
+            </div>
+            {% comment %}
+            <div class="col-sm-4">
+              <button
+                type="button"
+                id="myBtn"
+                class="btn btn-primary btn2"
+                data-toggle="modal"
+                data-target="#exampleModal"
+                data-whatever="@mdo"
+              >
+                <i class="fa fa-plus"></i> Add New Customer
+              </button>
+            </div>
+            {% endcomment %}
+          </div>
+        </div>
+        <form method="post" id="data_validation" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <table class="table table-bordered table-responsive">
+            <thead class="striped text-wrap">
+              <tr>
+                <th>Sr.No.</th>
+                <th><b>Title</b></th>
+                <th>Content</th>
+                <th>Created on</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            {% for i in todo_obj %}
+            <tbody>
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td><b>{{i.title}}</b></td>
+                <td>{{i.content}}</td>
+                <td>
+                  {{i.created_at|date:"d/m/Y"}} {{i.created_at|time:"H:i:s A"}}
+                </td>
+
+                <td>
+                  <a
+                    class="btn btn-danger btn-sm ml-2 mb-2"
+                    href="{% url 'delete' i.id %}"
+                    >Delete</a
+                  >
+                  {% if i.task_status is False %}
+                  <a
+                    class="btn btn-info btn-sm ml-2"
+                    href="{% url 'mark_completed' i.id%}"
+                    >Mark completed</a
+                  >
+                  {% else %}
+                  <a class="btn btn-info btn-sm ml-2 disabled">completed</a>
+
+                  {% endif %}
+                </td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% endblock body %}
+</body>
